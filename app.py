@@ -2,15 +2,21 @@ import os
 
 import streamlit as st
 from dotenv import load_dotenv
-from google import genai
+import google.generativeai as genai
 
 
-def get_client() -> genai.Client:
+def get_model():
+    """
+    Configure and return a Gemini GenerativeModel using the GEMINI_API_KEY.
+    """
     load_dotenv()
     api_key = os.getenv("GEMINI_API_KEY")
     if not api_key:
         raise RuntimeError("GEMINI_API_KEY is not set in your .env or environment.")
-    return genai.Client(api_key=api_key)
+
+    genai.configure(api_key=api_key)
+    # You can change the model name if needed
+    return genai.GenerativeModel("gemini-1.5-flash")
 
 
 def main() -> None:
@@ -35,11 +41,8 @@ def main() -> None:
             st.markdown(prompt)
 
         try:
-            client = get_client()
-            response = client.models.generate_content(
-                model="gemini-2.5-flash",
-                contents=prompt,
-            )
+            model = get_model()
+            response = model.generate_content(prompt)
             answer = response.text or "(No response text returned.)"
         except Exception as e:
             answer = f"Error while calling Gemini API: {e}"
