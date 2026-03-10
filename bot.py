@@ -19,7 +19,7 @@ def main() -> None:
 
     # Configure the Gemini client (google-generativeai library)
     genai.configure(api_key=api_key)
-    model = genai.GenerativeModel("gemini-1.5-flash")
+    model = genai.GenerativeModel("gemini-2.0-flash")
 
     # Ask the user for a question
     user_question = input("Ask Ether Bot a question: ")

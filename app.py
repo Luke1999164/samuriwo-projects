@@ -16,7 +16,7 @@ def get_model():
 
     genai.configure(api_key=api_key)
     # You can change the model name if needed
-    return genai.GenerativeModel("gemini-1.5-flash")
+    return genai.GenerativeModel("gemini-2.0-flash")
 
 
 def main() -> None:
