@@ -19,7 +19,6 @@ def main() -> None:
 
     # Configure the Gemini client (google-generativeai library)
     genai.configure(api_key=api_key)
-    model = genai.GenerativeModel("gemini-2.0-flash")
 
     # Ask the user for a question
     user_question = input("Ask Ether Bot a question: ")
@@ -27,11 +26,20 @@ def main() -> None:
         print("You didn't ask a question.")
         return
 
-    try:
-        # Basic text generation
-        response = model.generate_content(user_question)
-    except Exception as e:
-        print(f"Error while calling Gemini API: {e}")
+    # Prefer the "latest" alias for compatibility; keep it within the 1.5-flash family.
+    model_names = ["gemini-1.5-flash-latest", "gemini-1.5-flash", "gemini-flash-latest"]
+    response = None
+    last_error = None
+    for name in model_names:
+        try:
+            model = genai.GenerativeModel(name)
+            response = model.generate_content(user_question)
+            break
+        except Exception as e:
+            last_error = e
+
+    if response is None:
+        print(f"Error while calling Gemini API: {last_error}")
         return
 
     # Print Gemini's answer
